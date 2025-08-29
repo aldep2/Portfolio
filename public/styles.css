@@ -1,0 +1,255 @@
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap');
+
+/* ------------------------ */
+/* Fond général et typographie */
+/* ------------------------ */
+body {
+  margin: 0;
+  font-family: 'Roboto', Arial, sans-serif;
+  background-image: url('/img/fond.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #333;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(255, 255, 255, 0.3);
+  z-index: -1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ------------------------ */
+/* Conteneur et header */
+/* ------------------------ */
+.container { 
+  width: min(1100px, 92%); 
+  margin-inline: auto; 
+}
+
+header { 
+  background: #827360; 
+  padding: 1rem; 
+  border-bottom: 1px solid #e2e8f0; 
+}
+
+nav { 
+  display: flex; 
+  gap: 1rem; 
+}
+
+.nav-links a {
+  text-decoration: none; 
+  color: #475569; 
+  padding: .5rem .75rem; 
+  border-radius: .75rem;
+}
+.nav-links a:hover { 
+  color: #0f172a; 
+  background: #eff6ff; 
+}
+
+/* ------------------------ */
+/* Main et sections */
+/* ------------------------ */
+main { 
+  padding: 2rem;
+  background-color: transparent; /* transparent main */
+}
+
+.hero {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  background-color: transparent !important; /* force transparence */
+  padding: 1rem 0;
+}
+
+.hero img {
+  max-width: 300px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+
+.hero-text .p8 {
+  font-family: 'Playfair Display', serif;
+  color: #141414;       /* texte noir */
+  font-weight: 600;  /* semi-gras */
+  line-height: 2;
+  letter-spacing: 0.5px; /* optionnel */
+  font-size: 1.2rem; /* taille du texte */
+}
+
+/* ------------------------ */
+/* Galerie publique */
+/* ------------------------ */
+#galerie {
+  padding: 2rem;
+  text-align: center;
+}
+
+#galerie h2 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: #1e293b;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px; /* espace transparent de 1px */
+}
+
+.gallery img {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* carré */
+  object-fit: cover;   
+  display: block;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.gallery img:hover {
+  transform: scale(1.05);
+  z-index: 2;
+}
+
+/* Responsive Galerie */
+@media (min-width: 1200px) {
+  .gallery {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .gallery { grid-template-columns: 1fr; }
+}
+
+/* ------------------------ */
+/* Lightbox */
+/* ------------------------ */
+.lightbox {
+  display: none;
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.9);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.lightbox .close,
+.lightbox .prev,
+.lightbox .next {
+  position: absolute;
+  color: white;
+  font-size: 3rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  user-select: none;
+}
+
+.lightbox .close { top: 20px; right: 30px; }
+.lightbox .prev { left: 20px; top: 50%; transform: translateY(-50%); }
+.lightbox .next { right: 20px; top: 50%; transform: translateY(-50%); }
+
+.lightbox-img {
+  max-width: 90%;
+  max-height: 90%;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+}
+
+.lightbox-img.fade-in { opacity: 1; }
+
+/* ------------------------ */
+/* Footer */
+/* ------------------------ */
+footer {
+  padding: 1rem;
+  text-align: center;
+  background: #fff;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* ------------------------ */
+/* Galerie admin */
+/* ------------------------ */
+.admin-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.admin-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 150px;
+  text-align: center;
+}
+
+.admin-item img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 5px;
+}
+
+.admin-item button {
+  margin-top: 5px;
+  padding: 5px 10px;
+  border: none;
+  background: #827360;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.admin-item button:hover {
+  background: #5a574d;
+}
+
+/* ------------------------ */
+/* Formulaire upload admin */
+/* ------------------------ */
+form#upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+
+form#upload-form input[type="file"],
+form#upload-form input[type="text"],
+form#upload-form button {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+form#upload-form button {
+  background: #827360;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+form#upload-form button:hover {
+  background: #5a574d;
+}

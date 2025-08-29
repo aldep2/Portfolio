@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galerie</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <h1>Ma Galerie</h1>
+      <nav class="nav-links">
+        <a href="/">Accueil</a>
+        <a href="/galerie.html">Galerie</a>
+        <a href="/admin/admin.html">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="galerie">
+      <h2>Galerie d'images</h2>
+      <div class="gallery" id="gallery"></div>
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="close" id="close">&times;</span>
+    <span class="prev" id="prev">&#10094;</span>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="">
+    <span class="next" id="next">&#10095;</span>
+  </div>
+
+  <footer>
+    &copy; 2025 Ma Galerie
+  </footer>
+
+  <script>
+    // Récupérer les images depuis ton serveur
+    fetch('/galerie-data')
+      .then(res => res.json())
+      .then(images => {
+        const gallery = document.getElementById('gallery');
+        images.forEach(img => {
+          const div = document.createElement('div');
+          div.classList.add('gallery-item');
+          const image = document.createElement('img');
+          image.src = '/img/' + img.filename;
+          image.alt = img.alt || img.originalname;
+          div.appendChild(image);
+          gallery.appendChild(div);
+        });
+      });
+
+    // Lightbox
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const closeBtn = document.getElementById('close');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+
+    let currentIndex = 0;
+    let galleryImages = [];
+
+    function openLightbox(index) {
+      currentIndex = index;
+      const img = galleryImages[currentIndex];
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.style.display = 'flex';
+      setTimeout(() => lightboxImg.classList.add('fade-in'), 10);
+    }
+
+    function closeLightbox() {
+      lightboxImg.classList.remove('fade-in');
+      lightbox.style.display = 'none';
+    }
+
+    function showPrev() {
+      currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+      lightboxImg.classList.remove('fade-in');
+      setTimeout(() => {
+        lightboxImg.src = galleryImages[currentIndex].src;
+        lightboxImg.alt = galleryImages[currentIndex].alt;
+        lightboxImg.classList.add('fade-in');
+      }, 100);
+    }
+
+    function showNext() {
+      currentIndex = (currentIndex + 1) % galleryImages.length;
+      lightboxImg.classList.remove('fade-in');
+      setTimeout(() => {
+        lightboxImg.src = galleryImages[currentIndex].src;
+        lightboxImg.alt = galleryImages[currentIndex].alt;
+        lightboxImg.classList.add('fade-in');
+      }, 100);
+    }
+
+    closeBtn.addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', showPrev);
+    nextBtn.addEventListener('click', showNext);
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    // Attendre que les images soient ajoutées au DOM
+    setTimeout(() => {
+      galleryImages = Array.from(document.querySelectorAll('.gallery-item img'));
+      galleryImages.forEach((img, index) => {
+        img.addEventListener('click', () => openLightbox(index));
+      });
+    }, 500);
+  </script>
+
+</body>
+</html>
