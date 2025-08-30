@@ -37,70 +37,75 @@
   </footer>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Liste des images
-      const images = Array.from({length: 21}, (_, i) => ({
-        src: `./img/photo${i+1}.jpg`,
-        alt: `Image ${i+1}`
-      }));
+    // Création et tri des images
+    const images = Array.from({length: 21}, (_, i) => ({
+      src: `./img/photo${i+1}.jpg`,
+      alt: `Image ${i+1}`
+    })).sort((a, b) => {
+      const numA = parseInt(a.src.match(/photo(\d+)\.jpg/)[1]);
+      const numB = parseInt(b.src.match(/photo(\d+)\.jpg/)[1]);
+      return numA - numB;
+    });
 
-      const gallery = document.getElementById('gallery');
-      images.forEach(img => {
-        const div = document.createElement('div');
-        div.classList.add('gallery-item');
-        const image = document.createElement('img');
-        image.src = img.src;
-        image.alt = img.alt;
-        div.appendChild(image);
-        gallery.appendChild(div);
-      });
+    const gallery = document.getElementById('gallery');
+    images.forEach(img => {
+      const div = document.createElement('div');
+      div.classList.add('gallery-item');
+      const image = document.createElement('img');
+      image.src = img.src;
+      image.alt = img.alt;
+      div.appendChild(image);
+      gallery.appendChild(div);
+    });
 
-      // Lightbox
-      const lightbox = document.getElementById('lightbox');
-      const lightboxImg = document.getElementById('lightbox-img');
-      const closeBtn = document.getElementById('close');
-      const prevBtn = document.getElementById('prev');
-      const nextBtn = document.getElementById('next');
+    // Lightbox
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const closeBtn = document.getElementById('close');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
 
-      let currentIndex = 0;
-      const galleryImages = Array.from(document.querySelectorAll('.gallery-item img'));
+    let currentIndex = 0;
+    let galleryImages = [];
 
-      function openLightbox(index) {
-        currentIndex = index;
-        const img = galleryImages[currentIndex];
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt;
-        lightbox.style.display = 'flex';
-      }
+    function openLightbox(index) {
+      currentIndex = index;
+      const img = galleryImages[currentIndex];
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.style.display = 'flex';
+    }
 
-      function closeLightbox() {
-        lightbox.style.display = 'none';
-      }
+    function closeLightbox() {
+      lightbox.style.display = 'none';
+    }
 
-      function showPrev() {
-        currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-        const img = galleryImages[currentIndex];
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt;
-      }
+    function showPrev() {
+      currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+      const img = galleryImages[currentIndex];
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+    }
 
-      function showNext() {
-        currentIndex = (currentIndex + 1) % galleryImages.length;
-        const img = galleryImages[currentIndex];
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt;
-      }
+    function showNext() {
+      currentIndex = (currentIndex + 1) % galleryImages.length;
+      const img = galleryImages[currentIndex];
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+    }
 
-      // Attacher les clics
+    closeBtn.addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', showPrev);
+    nextBtn.addEventListener('click', showNext);
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    // Attacher les clics aux images après création
+    window.addEventListener('load', () => {
+      galleryImages = Array.from(document.querySelectorAll('.gallery-item img'));
       galleryImages.forEach((img, index) => {
         img.addEventListener('click', () => openLightbox(index));
-      });
-
-      closeBtn.addEventListener('click', closeLightbox);
-      prevBtn.addEventListener('click', showPrev);
-      nextBtn.addEventListener('click', showNext);
-      lightbox.addEventListener('click', e => {
-        if (e.target === lightbox) closeLightbox();
       });
     });
   </script>
