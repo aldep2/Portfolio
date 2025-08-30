@@ -4,24 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galerie</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="./styles.css">
+  
 </head>
 <body>
 
   <header>
-    <div class="container">
-      <h1>Ma Galerie</h1>
-      <nav class="nav-links">
-        <a href="/">Accueil</a>
-        <a href="/galerie.html">Galerie</a>
-        <a href="/admin/admin.html">Admin</a>
-      </nav>
-    </div>
+    <h1>Ma Galerie</h1>
+    <nav>
+      <a href="./index.html">Accueil</a>
+      <a href="./galerie.html">Galerie</a>
+      <a href="./admin.html">Admin</a>
+    </nav>
   </header>
 
   <main>
     <section id="galerie">
-      <h2>Galerie d'images</h2>
+      <h2 style="text-align:center;">Galerie d'images</h2>
       <div class="gallery" id="gallery"></div>
     </section>
   </main>
@@ -34,26 +33,27 @@
     <span class="next" id="next">&#10095;</span>
   </div>
 
-  <footer>
+  <footer style="text-align:center; padding:1rem; background:#333; color:white;">
     &copy; 2025 Ma Galerie
   </footer>
 
   <script>
-    // Récupérer les images depuis ton serveur
-    fetch('/galerie-data')
-      .then(res => res.json())
-      .then(images => {
-        const gallery = document.getElementById('gallery');
-        images.forEach(img => {
-          const div = document.createElement('div');
-          div.classList.add('gallery-item');
-          const image = document.createElement('img');
-          image.src = '/img/' + img.filename;
-          image.alt = img.alt || img.originalname;
-          div.appendChild(image);
-          gallery.appendChild(div);
-        });
-      });
+    // Liste des images
+    const images = Array.from({length: 20}, (_, i) => ({
+      src: `./img/photo${i+1}.jpg`,
+      alt: `Image ${i+1}`
+    }));
+
+    const gallery = document.getElementById('gallery');
+    images.forEach(img => {
+      const div = document.createElement('div');
+      div.classList.add('gallery-item');
+      const image = document.createElement('img');
+      image.src = img.src;
+      image.alt = img.alt;
+      div.appendChild(image);
+      gallery.appendChild(div);
+    });
 
     // Lightbox
     const lightbox = document.getElementById('lightbox');
@@ -71,32 +71,24 @@
       lightboxImg.src = img.src;
       lightboxImg.alt = img.alt;
       lightbox.style.display = 'flex';
-      setTimeout(() => lightboxImg.classList.add('fade-in'), 10);
     }
 
     function closeLightbox() {
-      lightboxImg.classList.remove('fade-in');
       lightbox.style.display = 'none';
     }
 
     function showPrev() {
       currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-      lightboxImg.classList.remove('fade-in');
-      setTimeout(() => {
-        lightboxImg.src = galleryImages[currentIndex].src;
-        lightboxImg.alt = galleryImages[currentIndex].alt;
-        lightboxImg.classList.add('fade-in');
-      }, 100);
+      const img = galleryImages[currentIndex];
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
     }
 
     function showNext() {
       currentIndex = (currentIndex + 1) % galleryImages.length;
-      lightboxImg.classList.remove('fade-in');
-      setTimeout(() => {
-        lightboxImg.src = galleryImages[currentIndex].src;
-        lightboxImg.alt = galleryImages[currentIndex].alt;
-        lightboxImg.classList.add('fade-in');
-      }, 100);
+      const img = galleryImages[currentIndex];
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
     }
 
     closeBtn.addEventListener('click', closeLightbox);
@@ -106,7 +98,7 @@
       if (e.target === lightbox) closeLightbox();
     });
 
-    // Attendre que les images soient ajoutées au DOM
+    // Attacher les clics aux images
     setTimeout(() => {
       galleryImages = Array.from(document.querySelectorAll('.gallery-item img'));
       galleryImages.forEach((img, index) => {
