@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galerie</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <h1>Ma Galerie</h1>
+    <nav>
+      <a href="./index.html">Accueil</a>
+      <a href="./galerie.html">Galerie</a>
+      <a href="./admin.html">Admin</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="galerie">
+      <h2 style="text-align:center;">Galerie d'images</h2>
+      <div class="gallery" id="gallery"></div>
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="close" id="close">&times;</span>
+    <span class="prev" id="prev">&#10094;</span>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="">
+    <span class="next" id="next">&#10095;</span>
+  </div>
+
+  <footer style="text-align:center; padding:1rem; background:#333; color:white;">
+    &copy; 2025 Ma Galerie
+  </footer>
+
+  <script>
+    // --- Liste des images ---
+    const images = Array.from({ length: 19 }, (_, i) => ({
+      src: `./img/photo${i + 1}.jpg`,
+      alt: `Image ${i + 1}`
+    }));
+
+    const gallery = document.getElementById("gallery");
+
+    // --- Génération des miniatures ---
+    images.forEach((img, index) => {
+      const div = document.createElement("div");
+      div.classList.add("gallery-item");
+
+      const image = document.createElement("img");
+      image.src = img.src;
+      image.alt = img.alt;
+
+      // clic sur miniature → ouvrir la lightbox
+      image.addEventListener("click", () => openLightbox(index));
+
+      div.appendChild(image);
+      gallery.appendChild(div);
+    });
+
+    // --- Lightbox ---
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+    const closeBtn = document.getElementById("close");
+    const prevBtn = document.getElementById("prev");
+    const nextBtn = document.getElementById("next");
+
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+      currentIndex = index;
+      updateLightbox();
+      lightbox.style.display = "flex"; // montrer la lightbox
+    }
+
+    function closeLightbox() {
+      lightbox.style.display = "none";
+    }
+
+    function showPrev() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      updateLightbox();
+    }
+
+    function showNext() {
+      currentIndex = (currentIndex + 1) % images.length;
+      updateLightbox();
+    }
+
+    function updateLightbox() {
+      // Reset pour fade-in
+      lightboxImg.classList.remove('fade-in');
+      lightboxImg.src = images[currentIndex].src;
+      lightboxImg.alt = images[currentIndex].alt;
+      
+      // Petites millisecondes pour déclencher l'animation
+      setTimeout(() => lightboxImg.classList.add('fade-in'), 10);
+    }
+
+    // --- Événements ---
+    closeBtn.addEventListener("click", closeLightbox);
+    prevBtn.addEventListener("click", showPrev);
+    nextBtn.addEventListener("click", showNext);
+
+    // clic à l’extérieur de l’image → fermer
+    lightbox.addEventListener("click", e => {
+      if (e.target === lightbox) closeLightbox();
+    });
+  </script>
+
+</body>
+</html>

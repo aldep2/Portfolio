@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Middleware pour fichiers statiques
-app.use(express.static('public'));
+app.use(express.static('docs'));
 app.use('/img', express.static('img'));
 app.use("/admin", express.static("admin"));
 
@@ -30,8 +30,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Page admin.html
 app.get('/admin/admin.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin', 'admin.html'));
+  res.sendFile(path.join(__dirname, 'docs', 'admin.html'));
 });
+
 
 // Upload d'image
 app.post('/upload', upload.single('image'), (req, res) => {

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Galerie</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header / Menu -->
+  <header>
+    <div class="container">
+      <nav class="nav-links">
+        <a href="./admin.html">Admin</a>
+        <a href="./index.html">Accueil</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Gestion de la galerie</h1>
+
+    <!-- Formulaire ajout d'image -->
+    <form id="upload-form" action="/upload" method="POST" enctype="multipart/form-data">
+      <label for="image">Choisir une image :</label>
+      <input type="file" name="image" id="image" required>
+
+      <label for="alt">Texte alternatif :</label>
+      <input type="text" name="alt" id="alt" placeholder="Description de l'image">
+
+      <button type="submit">Ajouter</button>
+    </form>
+
+    <!-- Galerie admin -->
+    <div class="admin-gallery" id="admin-gallery">
+      <!-- Les images seront injectées ici par le serveur -->
+      <!-- Exemple d'image :
+      <div class="admin-item">
+        <img src="/img/nomfichier.jpg" alt="Description">
+        <p>Nom de l'image.jpg</p>
+        <form action="/delete" method="POST">
+          <input type="hidden" name="filename" value="nomfichier.jpg">
+          <button type="submit">Supprimer</button>
+        </form>
+      </div>
+      -->
+    </div>
+  </main>
+  <script>
+  async function loadAdminGallery() {
+    const res = await fetch('/galerie-data');
+    const images = await res.json();
+    const gallery = document.getElementById('admin-gallery');
+    gallery.innerHTML = ''; // on vide avant d'injecter
+
+    images.forEach(img => {
+      const item = document.createElement('div');
+      item.classList.add('admin-item');
+
+      item.innerHTML = `
+        <img src="/img/${img.filename}" alt="${img.alt || ''}" style="max-width:150px; display:block; margin-bottom:0.5rem;">
+        <p>${img.originalname}</p>
+        <form action="/delete" method="POST">
+          <input type="hidden" name="filename" value="${img.filename}">
+          <button type="submit">Supprimer</button>
+        </form>
+      `;
+
+      gallery.appendChild(item);
+    });
+  }
+
+  loadAdminGallery();
+</script>
+
+</body>
+</html>
