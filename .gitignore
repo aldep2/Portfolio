@@ -1,0 +1,14 @@
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Backend data
+/data/*.json
+
+# IDE / OS files
+.DS_Store
+*.swp
