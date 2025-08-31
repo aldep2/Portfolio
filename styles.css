@@ -70,29 +70,48 @@ main {
   background-color: transparent; /* transparent main */
 }
 
+/* --- HERO (accueil) --- */
 .hero {
   display: flex;
+  flex-wrap: wrap;              /* permet d'aller à la ligne sur mobile */
   gap: 2rem;
   align-items: center;
-  background-color: transparent !important; /* force transparence */
-  padding: 1rem 0;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.7); /* cadre transparent */
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  max-width: 900px;
+  margin: 2rem auto;            /* centre dans la page */
 }
 
 .hero img {
-  max-width: 300px;
-  width: 100%;
-  border-radius: 10px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;           /* médaillon rond */
+  border: 4px solid #fff;       /* petit contour blanc */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
+.hero-text {
+  flex: 1;
+  min-width: 250px;
+}
+
+.hero-text h2 {
+  margin-bottom: 1rem;
+}
 
 .hero-text .p8 {
   font-family: 'Playfair Display', serif;
-  color: #141414;       /* texte noir */
-  font-weight: 600;  /* semi-gras */
-  line-height: 2;
-  letter-spacing: 0.5px; /* optionnel */
-  font-size: 1.2rem; /* taille du texte */
+  color: #141414;
+  font-weight: 500;
+  line-height: 1.6;
+  font-size: 1.1rem;
+  text-align: justify;
 }
+
 
 /* ------------------------ */
 /* Galerie publique */
