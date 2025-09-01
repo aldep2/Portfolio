@@ -1,13 +1,17 @@
 # Node modules
 node_modules/
 
+# Admin local (non nécessaire sur GitHub Pages)
+admin/
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Backend data
+# Backend data à ignorer sauf celui nécessaire pour GitHub Pages
 /data/*.json
+!docs/data/*.json
 
 # IDE / OS files
 .DS_Store
