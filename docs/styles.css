@@ -1,4 +1,6 @@
+/* ------------------------ */
 /* Google Fonts */
+/* ------------------------ */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto:wght@400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap');
 
@@ -50,18 +52,18 @@ nav {
   display: flex;
   gap: 2rem;
   align-items: center;
-  background-color: rgba(255,255,255,0.7); /* cadre transparent */
+  background-color: rgba(255,255,255,0.7);
   padding: 2rem;
   border-radius: 15px;
   max-width: 1000px;
-  margin: 2rem auto; /* centré */
+  margin: 2rem auto;
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 .hero img {
   max-width: 280px;
   width: 100%;
-  border-radius: 50%; /* médaillon */
+  border-radius: 50%;
   border: 4px solid #fff;
   box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
@@ -123,13 +125,13 @@ nav {
 .gallery {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1px; /* espace transparent de 1px */
+  gap: 1px;
 }
 
 .gallery img {
   width: 100%;
-  aspect-ratio: 1 / 1; /* carré */
-  object-fit: cover;   
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   display: block;
   cursor: pointer;
   transition: transform 0.3s ease;
@@ -161,6 +163,10 @@ nav {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+}
+
+.lightbox.active {
+  display: flex;
 }
 
 .lightbox .close,

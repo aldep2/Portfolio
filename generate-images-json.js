@@ -1,23 +1,52 @@
+// generate-images-json.js
 const fs = require('fs');
 const path = require('path');
 
-// Dossier où sont tes images
-const imgDir = path.join(__dirname, 'img');
+const IMG_DIR  = path.join(__dirname, 'docs', 'img');
+const DATA_DIR = path.join(__dirname, 'docs', 'data');
+const JSON_PATH = path.join(DATA_DIR, 'images.json');
 
-// Fichier JSON à générer
-const jsonFile = path.join(__dirname, 'data', 'images.json');
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
-// Lire tous les fichiers dans le dossier img
-const files = fs.readdirSync(imgDir).filter(f => /\.(jpe?g|png|gif)$/i.test(f));
+// récupère uniquement les images
+let files = fs.readdirSync(IMG_DIR).filter(f => /\.(jpe?g|png|gif)$/i.test(f));
 
-// Créer un tableau pour le JSON
-const images = files.map(f => ({
+let maxIndex = 0;
+
+// détecter le plus grand "photoN"
+files.forEach(f => {
+  const match = f.match(/^photo(\d+)\./i);
+  if (match) {
+    const n = parseInt(match[1], 10);
+    if (n > maxIndex) maxIndex = n;
+  }
+});
+
+// renommer uniquement les fichiers qui n'ont pas encore le format "photoN"
+files.forEach(f => {
+  if (!/^photo\d+\./i.test(f)) {
+    maxIndex++;
+    const ext = path.extname(f).toLowerCase();
+    const newName = `photo${maxIndex}${ext}`;
+    fs.renameSync(path.join(IMG_DIR, f), path.join(IMG_DIR, newName));
+    console.log(`Renommé: ${f} → ${newName}`);
+  }
+});
+
+// reconstruire la liste finale
+const finalFiles = fs.readdirSync(IMG_DIR)
+  .filter(f => /^photo\d+\./i.test(f)) // ne garder que photoN
+  .sort((a, b) => {
+    const ma = a.match(/^photo(\d+)\./i);
+    const mb = b.match(/^photo(\d+)\./i);
+    return parseInt(ma[1], 10) - parseInt(mb[1], 10);
+  });
+
+const images = finalFiles.map(f => ({
   filename: f,
   originalname: f,
   alt: ''
 }));
 
-// Écrire le JSON
-fs.writeFileSync(jsonFile, JSON.stringify(images, null, 2));
-
-console.log(`✅ JSON généré pour ${files.length} images dans ${jsonFile}`);
+fs.writeFileSync(JSON_PATH, JSON.stringify(images, null, 2), 'utf-8');
+console.log(`✅ JSON généré (${images.length} images) → ${JSON_PATH}`);

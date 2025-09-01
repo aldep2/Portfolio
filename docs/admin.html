@@ -2,75 +2,40 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Galerie</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Header / Menu -->
   <header>
-    <div class="container">
-      <nav class="nav-links">
-        <a href="./admin.html">Admin</a>
-        <a href="./index.html">Accueil</a>
-      </nav>
-    </div>
+    <h1>Admin Galerie</h1>
+    <nav>
+      <a href="./index.html">Accueil</a>
+      <a href="./galerie.html">Galerie</a>
+      <a href="./admin.html">Admin</a>
+    </nav>
   </header>
 
-  <main class="container">
-    <h1>Gestion de la galerie</h1>
+  <main>
+    <section>
+      <h2>Ajouter une image</h2>
+      <form id="upload-form">
+        <input type="file" name="image" accept="image/*" required>
+        <input type="text" name="alt" placeholder="Texte alternatif">
+        <button type="submit">Uploader</button>
+      </form>
+    </section>
 
-    <!-- Formulaire ajout d'image -->
-    <form id="upload-form" action="/upload" method="POST" enctype="multipart/form-data">
-      <label for="image">Choisir une image :</label>
-      <input type="file" name="image" id="image" required>
-
-      <label for="alt">Texte alternatif :</label>
-      <input type="text" name="alt" id="alt" placeholder="Description de l'image">
-
-      <button type="submit">Ajouter</button>
-    </form>
-
-    <!-- Galerie admin -->
-    <div class="admin-gallery" id="admin-gallery">
-      <!-- Les images seront injectées ici par le serveur -->
-      <!-- Exemple d'image :
-      <div class="admin-item">
-        <img src="/img/nomfichier.jpg" alt="Description">
-        <p>Nom de l'image.jpg</p>
-        <form action="/delete" method="POST">
-          <input type="hidden" name="filename" value="nomfichier.jpg">
-          <button type="submit">Supprimer</button>
-        </form>
-      </div>
-      -->
-    </div>
+    <section>
+      <h2>Images existantes</h2>
+      <div class="gallery" id="admin-gallery"></div>
+    </section>
   </main>
-  <script>
-  async function loadAdminGallery() {
-    const res = await fetch('/galerie-data');
-    const images = await res.json();
-    const gallery = document.getElementById('admin-gallery');
-    gallery.innerHTML = ''; // on vide avant d'injecter
 
-    images.forEach(img => {
-      const item = document.createElement('div');
-      item.classList.add('admin-item');
+  <footer style="text-align:center; padding:1rem; background:#333; color:white;">
+    &copy; 2025 Ma Galerie
+  </footer>
 
-      item.innerHTML = `
-        <img src="/img/${img.filename}" alt="${img.alt || ''}" style="max-width:150px; display:block; margin-bottom:0.5rem;">
-        <p>${img.originalname}</p>
-        <form action="/delete" method="POST">
-          <input type="hidden" name="filename" value="${img.filename}">
-          <button type="submit">Supprimer</button>
-        </form>
-      `;
-
-      gallery.appendChild(item);
-    });
-  }
-
-  loadAdminGallery();
-</script>
-
+  <script src="admin.js"></script>
 </body>
 </html>

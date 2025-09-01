@@ -1,3 +1,5 @@
+
+// server.js
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
@@ -6,80 +8,86 @@ const path = require('path');
 const app = express();
 const PORT = 3055;
 
-// Stockage des images avec Multer
+const DOCS = path.join(__dirname, 'docs');
+const IMGS = path.join(DOCS, 'img');
+const DATA = path.join(DOCS, 'data');
+const imagesFile = path.join(DATA, 'images.json');
+
+// ensure directories & images.json exist
+if (!fs.existsSync(DOCS)) fs.mkdirSync(DOCS);
+if (!fs.existsSync(IMGS)) fs.mkdirSync(IMGS, { recursive: true });
+if (!fs.existsSync(DATA)) fs.mkdirSync(DATA, { recursive: true });
+if (!fs.existsSync(imagesFile)) fs.writeFileSync(imagesFile, JSON.stringify([], null, 2));
+
+// Multer → stocke dans docs/img
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'img/');
-  },
-  filename: function (req, file, cb) {
-    // On garde un nom unique
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+  destination: (req, file, cb) => cb(null, IMGS),
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     cb(null, uniqueSuffix + path.extname(file.originalname));
   }
 });
+const upload = multer({ storage });
 
-const upload = multer({ storage: storage });
+app.use(express.static(DOCS));
+app.use('/img', express.static(IMGS));
+app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
-// Middleware pour fichiers statiques
-app.use(express.static('docs'));
-app.use('/img', express.static('img'));
-app.use("/admin", express.static("admin"));
-
-// Middleware pour parser les formulaires
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-// Page admin.html
-app.get('/admin/admin.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'docs', 'admin.html'));
+function readImages() {
+  return JSON.parse(fs.readFileSync(imagesFile));
+}
+function writeImages(arr) {
+  fs.writeFileSync(imagesFile, JSON.stringify(arr, null, 2));
+}
+
+// compatibilité : si admin.html inclut <script src="admin.js"> on sert admin/admin.js à /admin.js
+app.get('/admin.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin', 'admin.js'));
 });
 
-
-// Upload d'image
-app.post('/upload', upload.single('image'), (req, res) => {
-  if (!req.file) return res.status(400).send('Aucun fichier uploadé');
-
-  const imagesFile = path.join(__dirname, 'data', 'images.json');
-  const images = JSON.parse(fs.readFileSync(imagesFile));
-  
-  images.push({
-    filename: req.file.filename,
-    originalname: req.file.originalname,
-    alt: req.body.alt || ''
-  });
-
-  fs.writeFileSync(imagesFile, JSON.stringify(images, null, 2));
-
-  res.redirect('/admin/admin.html');
+// API
+app.get('/api/images', (req, res) => {
+  try { res.json(readImages()); }
+  catch (err) { res.status(500).json({ error: err.message }); }
 });
-// Supprimer une image
-app.post('/delete', express.urlencoded({ extended: true }), (req, res) => {
-  const { filename } = req.body;
-  if (!filename) return res.status(400).send('Aucun fichier spécifié');
 
-  const imagesFile = path.join(__dirname, 'data', 'images.json');
-  const images = JSON.parse(fs.readFileSync(imagesFile));
-
-  // Filtrer les images pour enlever celle à supprimer
-  const updatedImages = images.filter(img => img.filename !== filename);
-
-  // Supprimer le fichier physique
-  const filePath = path.join(__dirname, 'img', filename);
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath);
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'Aucun fichier uploadé' });
+    const images = readImages();
+    images.push({
+      filename: req.file.filename,
+      originalname: req.file.originalname,
+      alt: req.body.alt || ''
+    });
+    writeImages(images);
+    res.json({ success: true, file: req.file.filename, images });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
   }
-
-  // Mettre à jour le JSON
-  fs.writeFileSync(imagesFile, JSON.stringify(updatedImages, null, 2));
-
-  res.redirect('/admin/admin.html');
 });
 
-// Récupération des images pour la galerie
-app.get('/galerie-data', (req, res) => {
-  const images = JSON.parse(fs.readFileSync('data/images.json'));
-  res.json(images);
+app.delete('/api/images/:filename', (req, res) => {
+  try {
+    const filename = req.params.filename;
+    if (!filename) return res.status(400).json({ error: 'filename manquant' });
+    let images = readImages();
+    images = images.filter(img => img.filename !== filename);
+    const filePath = path.join(IMGS, filename);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    writeImages(images);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
-app.listen(PORT, () => {
-  console.log(`Serveur lancé sur http://localhost:${PORT}`);
-});
+// garder la compat: fournir le JSON brut si on le demande
+app.get('/data/images.json', (req, res) => res.sendFile(imagesFile));
+
+app.listen(PORT, () => console.log(`Serveur démarré → http://localhost:${PORT}`));
