@@ -7,8 +7,23 @@
 /* ------------------------ */
 /* Fond général et typographie */
 /* ------------------------ */
+header {
+  background: #827360;
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+
+  /* Ajout pour le rendre fixe */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
 body {
-  margin: 0;
+  margin-top: 150px; /* espace pour ne pas cacher le contenu sous le header */
+
+  
   font-family: 'Roboto', Arial, sans-serif;
   background-image: url('./img2/fond.jpg');
   background-size: cover;
@@ -52,7 +67,7 @@ nav {
   display: flex;
   gap: 2rem;
   align-items: center;
-  background-color: rgba(255,255,255,0.7);
+  background-color: rgba(255,255,255,0.4);
   padding: 2rem;
   border-radius: 15px;
   max-width: 1000px;
