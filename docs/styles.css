@@ -121,13 +121,22 @@ nav {
   font-size: 2rem;
   color: #1e293b;
 }
+.gallery-info {
+  text-align: center;
+  font-style: italic;
+  font-size: 1.5rem;
+  color: #091cf4;
+  margin-bottom: 1rem;
+}
 
 .gallery {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
+  position: relative;
 }
 
+/* Images de la galerie avec tooltip */
 .gallery img {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -135,8 +144,32 @@ nav {
   display: block;
   cursor: pointer;
   transition: transform 0.3s ease;
+  position: relative;
 }
 
+/* Tooltip sur hover */
+.gallery img::after {
+  content: "Cliquez pour agrandir";
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 3px 6px;
+  font-size: 12px;
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.gallery img:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-3px);
+}
+
+/* Effet léger au hover */
 .gallery img:hover {
   transform: scale(1.05);
   z-index: 2;
@@ -268,6 +301,7 @@ form#upload-form button {
 form#upload-form button:hover {
   background: #5a574d;
 }
+
 .contact-section {
   max-width: 600px;
   margin: 40px auto;
