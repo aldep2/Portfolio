@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact - Portfolio Aldep</title>
-  <meta name="description" content="Envoyez un message à Alain (Aldep) via ce formulaire de contact.">
-  <meta name="author" content="Alain / Aldep">
-  <link rel="canonical" href="https://aldep2.github.io/Portfolio/docs/contact.html">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -23,8 +20,8 @@
   <main>
     <section class="contact-section">
       <h2>Envoyez-moi un message</h2>
-      <form action="https://formspree.io/f/xvgbbaen" method="POST" class="contact-form">
-        
+
+      <form id="contact-form" action="https://formspree.io/f/xvgbbaen" method="POST" class="contact-form">
         <label for="name">Nom :</label>
         <input type="text" id="name" name="name" required>
 
@@ -34,17 +31,56 @@
         <label for="message">Message :</label>
         <textarea id="message" name="message" rows="6" required></textarea>
 
-        <!-- Redirection vers la page Merci dans le même dossier -->
-        <input type="hidden" name="_redirect" value="https://aldep2.github.io/Portfolio/docs/merci.html">
-
         <button type="submit">Envoyer</button>
       </form>
+
+      <p id="form-message" style="display:none; color:green; margin-top:10px;">
+        Merci ! Votre message a été envoyé.
+      </p>
+
     </section>
   </main>
 
   <footer>
     <p>&copy; 2025 - Mon Site</p>
   </footer>
+
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('contact-form');
+  const message = document.getElementById('form-message');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault(); // Empêche le rechargement de la page
+    const data = new FormData(form);
+
+    try {
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        form.style.display = 'none';       // Cache le formulaire
+        message.style.display = 'block';    // Affiche le message Merci
+
+        // Redirection après 2 secondes
+        setTimeout(() => {
+          window.location.href = 'galerie.html';
+        }, 2000);
+      } else {
+        alert('Oops ! Une erreur est survenue. Veuillez réessayer.');
+      }
+    } catch (error) {
+      alert('Erreur réseau. Veuillez réessayer.');
+      console.error(error);
+    }
+  });
+});
+</script>
+
+  
 
 </body>
 </html>
