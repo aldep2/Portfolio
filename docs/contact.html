@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact - Portfolio Aldep</title>
+  <meta name="description" content="Envoyez un message à Alain (Aldep) via ce formulaire de contact.">
+  <meta name="author" content="Alain / Aldep">
+  <link rel="canonical" href="https://aldep2.github.io/Portfolio/docs/contact.html">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <h1>Contactez-moi</h1>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="galerie.html">Galerie</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="contact-section">
+      <h2>Envoyez-moi un message</h2>
+      <form action="https://formspree.io/f/xvgbbaen" method="POST" class="contact-form">
+        
+        <label for="name">Nom :</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email :</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="message">Message :</label>
+        <textarea id="message" name="message" rows="6" required></textarea>
+
+        <!-- Redirection vers la page Merci dans le même dossier -->
+        <input type="hidden" name="_redirect" value="./merci.html">
+
+        <button type="submit">Envoyer</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 - Mon Site</p>
+  </footer>
+
+</body>
+</html>
