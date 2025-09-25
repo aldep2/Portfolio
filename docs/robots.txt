@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aldep2.github.io/Porfolio/sitemap.xml
+Sitemap: https://aldep2.github.io/Portfolio/sitemap.xml
